@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repo Investigator</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='3' width='10' height='10' fill='%23d1462f'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <button class="ghost-btn drawer-toggle threads-toggle" id="toggle-threads" type="button">Threads</button>
+    <a class="wordmark" href="/" data-nav><span class="wordmark-mark"></span>Repo Investigator</a>
+
+    <div class="bar-repo" id="bar-repo" hidden>
+      <span class="bar-repo-name" id="bar-repo-name"></span>
+    </div>
+
+    <div class="bar-actions">
+      <button class="ghost-btn drawer-toggle dossier-toggle" id="toggle-dossier" type="button">Dossier</button>
+      <button class="icon-btn" id="toggle-theme" type="button" title="Toggle theme" aria-label="Toggle theme">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <nav class="threads" id="threads" aria-label="Threads">
+      <div class="threads-head">
+        <a class="new-thread-btn" href="/" data-nav id="new-thread">
+          <span aria-hidden="true">+</span> New thread
+        </a>
+      </div>
+      <div class="threads-list" id="threads-list"></div>
+    </nav>
+
+    <section class="thread-col">
+      <div class="thread-scroll" id="thread-scroll">
+
+        <!-- New thread: pick a repository -->
+        <div class="setup" id="setup" hidden>
+          <p class="eyebrow" id="setup-eyebrow">New thread</p>
+          <h1 class="display">Which repository are we looking into?</h1>
+          <p class="lede">A router reads your question and sends a frontend or backend specialist into the code. They read files and search, then it writes up what they found.</p>
+
+          <form class="repo-form" id="repo-form" autocomplete="off">
+            <label class="sr-only" for="repo-input">Repository URL</label>
+            <input class="repo-input" id="repo-input" name="repo" spellcheck="false"
+                   placeholder="github.com/owner/repo">
+            <button class="solid-btn" type="submit">Start thread</button>
+          </form>
+          <p class="form-note" id="repo-note">A full git URL, or <code>owner/repo</code> for GitHub. Each repository gets its own clone in <code>sandbox/repos/</code>, made when you ask the first question.</p>
+
+          <section class="recent" id="recent" hidden>
+            <h2 class="sec-label">Recent repositories</h2>
+            <ol class="recent-list" id="recent-list"></ol>
+          </section>
+        </div>
+
+        <!-- Thread with nothing asked yet -->
+        <div class="intro" id="intro" hidden>
+          <p class="eyebrow" id="intro-repo"></p>
+          <h1 class="display">What's going wrong?</h1>
+          <p class="lede">Describe the bug or ask about the code. Specific symptoms work best: the page, the request, the error text.</p>
+          <ol class="starters" id="starters">
+            <li><button type="button">Review the whole codebase and list anything that looks broken.</button></li>
+            <li><button type="button">Trace how a request flows from the UI to the backend and back.</button></li>
+            <li><button type="button">Check the backend for unhandled errors and missing validation.</button></li>
+          </ol>
+        </div>
+
+        <div class="thread" id="thread"></div>
+      </div>
+
+      <form class="composer" id="composer" hidden>
+        <div class="composer-box">
+          <label class="sr-only" for="question">Question</label>
+          <textarea id="question" rows="1" placeholder="Describe the problem…"></textarea>
+          <button class="solid-btn send-btn" id="send" type="submit">
+            <span id="send-label">Investigate</span><kbd>↵</kbd>
+          </button>
+        </div>
+        <p class="composer-note" id="composer-note"></p>
+      </form>
+    </section>
+
+    <aside class="dossier" id="dossier" aria-label="Dossier">
+      <div class="dossier-inner">
+        <section class="dossier-sec">
+          <h2 class="sec-label">Repository</h2>
+          <div id="repo-info" class="repo-info"><span class="muted">No thread open</span></div>
+        </section>
+
+        <section class="dossier-sec">
+          <h2 class="sec-label">Reports on file</h2>
+          <div class="report-tabs" role="tablist">
+            <button class="report-tab" role="tab" data-report="frontend" type="button">
+              <span class="swatch swatch--frontend"></span>Frontend<span class="report-state">—</span>
+            </button>
+            <button class="report-tab" role="tab" data-report="backend" type="button">
+              <span class="swatch swatch--backend"></span>Backend<span class="report-state">—</span>
+            </button>
+          </div>
+          <div class="report-body prose prose--small" id="report-body"></div>
+        </section>
+
+        <section class="dossier-sec">
+          <h2 class="sec-label">Files read <span class="sec-count" id="files-count"></span></h2>
+          <ol class="files" id="files"></ol>
+        </section>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

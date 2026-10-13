@@ -1,0 +1,24 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Runtime data (chat threads, LangGraph checkpoints)
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Cloned repositories under analysis
+sandbox/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

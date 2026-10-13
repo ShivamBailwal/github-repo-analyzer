@@ -1,0 +1,10 @@
+aiosqlite==0.22.1
+langchain==1.4.3
+langchain-core==1.6.6
+langchain-google-genai==4.4.0
+langchain-mcp-adapters==0.3.2
+langgraph==1.2.14
+langgraph-checkpoint-sqlite==3.1.1
+python-dotenv==1.2.4
+starlette==1.7.0
+uvicorn==0.54.0
